@@ -114,7 +114,7 @@ def simulate_human_typing(node_selector, text_input, max_retries=3, timeout=10):
                 raise TimeoutError("没有找到可以输入的地方")
 
 
-def process_images(flag, max_retries=10):
+def process_images(max_retries=10):
     """
     处理图片，通过滑动屏幕并截图
     :param max_retries: 判断第一张图片时的最大重试次数
@@ -159,47 +159,6 @@ def process_images(flag, max_retries=10):
     print("滑动到第二张图片，开始截图...")
     image2 = Screen.toFile(f"/sdcard/DCIM/Screenshots/second_image_{timestamp}.png", Screen.bitmap(0, 423, 1080, 1500))
     print(f"第二张图片截图保存到: {image2}")
-
-    # 如果是要过剪映AI，则需要保存5张图片
-    if flag:
-        # 滑动到第三张图片
-        random_delay()
-        slide(540, 960, 140, 960, 500)
-        random_delay()
-
-        # 再次获取时间戳以命名第三张图片
-        timestamp = int(time.time())
-
-        # 截图第三张图片
-        print("滑动到第三张图片，开始截图...")
-        image3 = Screen.toFile(f"/sdcard/DCIM/Screenshots/second_image_{timestamp}.png", Screen.bitmap(0, 423, 1080, 1500))
-        print(f"第三张图片截图保存到: {image3}")
-
-        # 滑动到第四张图片
-        random_delay()
-        slide(540, 960, 140, 960, 500)
-        random_delay()
-
-        # 再次获取时间戳以命名第四张图片
-        timestamp = int(time.time())
-
-        # 截图第四张图片
-        print("滑动到第四张图片，开始截图...")
-        image4 = Screen.toFile(f"/sdcard/DCIM/Screenshots/second_image_{timestamp}.png", Screen.bitmap(0, 423, 1080, 1500))
-        print(f"第四张图片截图保存到: {image4}")
-
-        # 滑动到第五张图片
-        random_delay()
-        slide(540, 960, 140, 960, 500)
-        random_delay()
-
-        # 再次获取时间戳以命名第五张图片
-        timestamp = int(time.time())
-
-        # 截图第五张图片
-        print("滑动到第五张图片，开始截图...")
-        image5 = Screen.toFile(f"/sdcard/DCIM/Screenshots/second_image_{timestamp}.png", Screen.bitmap(0, 423, 1080, 1500))
-        print(f"第五张图片截图保存到: {image5}")
 
     return True
 
@@ -337,40 +296,7 @@ def videoInKuaishou(title):
     random_delay()
     clearApp()
 
-def videoInDouyin(title):
-    findDouYin = wait_for_node(Selector().desc("抖音"), timeout=60)
-    click_node_simulation(Selector().desc("抖音"))
-    # findMagnifier = wait_for_node(Selector().desc("搜索").type("Button"), timeout=45)
-    findShareButton = wait_for_node(Selector().desc("关注").visible(True), timeout=45)
-    # slide_simulation()
-    # random_delay()
-    click_node_simulation(Selector().desc("搜索").type("Button"))
-    findSearchBox = wait_for_node(Selector().type("EditText"), timeout=45)
-    Selector().type("EditText").input(title).find()
-    random_delay()
-    searchButton = Selector().text("搜索").find()
-    click(searchButton.rect.centerX(), searchButton.rect.centerY())
-    findVideoButton = wait_for_node(Selector().text("视频").type("Button"), timeout=45)
-    click_node_simulation(Selector().text("视频").type("Button").parent(1))
-    random_delay()
-    isVideoShow = wait_for_node(Selector().type("RecyclerView").visible(True).child(1).child(1), timeout=45)
-    random_delay()
-    click_node_simulation(Selector().type("RecyclerView").visible(True).child(1).child(1))
-    findShareButton = wait_for_node(Selector().desc("关注").visible(True), timeout=45)
-    random_delay()
-    slide_simulation(2, 4)
-    random_delay()
-    findShareBtn = Selector().desc("关注").visible(True).brother(0.5).find()
-    click(findShareBtn.rect.centerX(), findShareBtn.rect.centerY())
-    findShareLink = wait_for_node(Selector().text("分享链接"), timeout=45)
-    click_node_simulation(Selector().text("分享链接").parent(1))
-    random_delay()
-    findCopySuccess = wait_for_node(Selector().text("复制链接"), timeout=45)
-    random_delay()
-    clearApp()
-
-def douyinCrack(title):
-    print("我跑破解版抖音")
+def videoInDouyin(title, removeMark):
     # title = "薰衣草花香洗衣液深层去污去渍柔顺护衣持久留香洗衣液家庭大桶装"
     findDouyin = wait_for_node(Selector().text("抖音"), timeout=45)
     click_node_simulation(Selector().text("抖音").parent(1))
@@ -408,27 +334,37 @@ def douyinCrack(title):
     random_delay()
     slide_simulation(2, 4)
     random_delay()
-    touch.down(540, 960)
-    time.sleep(1)
-    touch.up(540, 960)
-    findDownBtn = wait_for_node(Selector().text("无水印下载"), timeout=45)
-    click_node_simulation(Selector().text("无水印下载"))
-    random_delay()
-    # 判断“无水印下载”控件是否仍然存在，如果存在则继续等待，直到消失
-    start_time = time.time()
-    attempts = 0
-    while True and time.time() - start_time < 180:
-            if not Selector().text("无水印下载").find():
-                print("“无水印下载”控件已消失，下载完成！")
-                break  # 控件消失，退出循环
-            else:
-                print("“无水印下载”控件仍然存在，继续等待...")
-                time.sleep(1)  # 每隔1秒检查一次
-            attempts += 1
-            random_delay(0.4, 1.0)  # 随机间隔模拟人为的操作速度
+    if removeMark == "抖音破解版":
+        touch.down(540, 960)
+        time.sleep(1)
+        touch.up(540, 960)
+        findDownBtn = wait_for_node(Selector().text("无水印下载"), timeout=45)
+        click_node_simulation(Selector().text("无水印下载"))
+        random_delay()
+        # 判断“无水印下载”控件是否仍然存在，如果存在则继续等待，直到消失
+        start_time = time.time()
+        attempts = 0
+        while True and time.time() - start_time < 180:
+                if not Selector().text("无水印下载").find():
+                    print("“无水印下载”控件已消失，下载完成！")
+                    break  # 控件消失，退出循环
+                else:
+                    print("“无水印下载”控件仍然存在，继续等待...")
+                    time.sleep(1)  # 每隔1秒检查一次
+                attempts += 1
+                random_delay(0.4, 1.0)  # 随机间隔模拟人为的操作速度
 
-            if attempts % 5 == 0:
-                print(f"轮询次数: {attempts}")
+                if attempts % 5 == 0:
+                    print(f"轮询次数: {attempts}")
+    else:
+        findShareBtn = Selector().desc("关注").visible(True).brother(0.5).find()
+        click(findShareBtn.rect.centerX(), findShareBtn.rect.centerY())
+        # findShareLink = wait_for_node(Selector().text("分享链接"), timeout=45)
+        # click_node_simulation(Selector().text("分享链接").parent(1))
+        findShareLink = wait_for_node(Selector().text("复制链接"), timeout=45)
+        click_node_simulation(Selector().text("复制链接").parent(1))
+        random_delay(3, 4)
+        # findCopySuccess = wait_for_node(Selector().text("复制链接"), timeout=45)
     random_delay()
     clearApp()
 
@@ -806,7 +742,7 @@ def jianYingAi(title):
     random_delay()
     click_node_simulation(Selector().desc("照片"))
     random_delay(2, 3)
-    for num in range(1, 6):
+    for num in range(1, 3):
         click_node_simulation(Selector().type("HorizontalScrollView").visible(True).brother(0.1).child(num).child(2))
         random_delay(1, 2)
     findChooseSuccess = wait_for_node(Selector().text("^3$").clickable(False), timeout=45)
@@ -872,9 +808,9 @@ def tunner(k, v):
         # # 声明使用全局变量
         # global counter_data
         res = json.loads(v)
-        lockApp("AScript", "开发者") # 测试版1
+        # lockApp("AScript", "开发者") # 测试版1
         # lockApp("MiTest", "运 行") # 测试版2
-        # lockApp("聚宝盆", "运 行") # 正式版
+        lockApp("聚宝盆", "运 行") # 正式版
         filterName = res["filter"]
         if res["runWay"] == "app":
             # 创建 R 类的实例
@@ -899,6 +835,18 @@ def tunner(k, v):
                         click_node_simulation(Selector().desc("侧边栏"))
                         ifLogin = 0
                     except TimeoutError:
+                        # 判断是否有打开看看，需要则点✖️
+                        attempt_count = 0
+                        while True and attempt_count < 5:
+                            findOpenLink = Selector().text("打开看看").type("Button").find()
+                            if findOpenLink:
+                                print("我找到了打开看看")
+                                click_node_simulation(Selector().text("打开看看").brother(-0.2).child(2))
+                                break
+                            attempt_count += 1
+                            print(f"我尝试查找打开看看第({attempt_count})次")
+                            random_delay(1, 2)
+
                         findLoginBtn = wait_for_node(Selector().text("^登录$"), timeout=10)
                         ifLogin = 1
                         toast("这个快手号掉了，我继续跑另一个", 5000)
@@ -1031,7 +979,7 @@ def tunner(k, v):
                     click(500, 500)
                     print("我进入主图啦")
                     random_delay()
-                    process_images(res["remove_repeat"]) # 主图截图
+                    process_images() # 主图截图
                     clearApp()
 
                     # 使用快手app找视频素材
@@ -1043,14 +991,6 @@ def tunner(k, v):
                         key.back()
 
                         videoInKuaishou(title)
-
-                        # 进入去水印软件
-                        if res["remove_mark"] == "TK去水印":
-                            removeInTk()
-                        elif res["remove_mark"] == "网页去水印":
-                            removeInWeb()
-                        elif res["remove_mark"] == "青禾去水印":
-                            removeInQh()
                         
                     # 使用破解版抖音app找视频素材
                     elif res["find_video"] == "抖音App":
@@ -1058,8 +998,18 @@ def tunner(k, v):
                         clearApp()
                         random_delay()
 
-                        douyinCrack(title)
+                        videoInDouyin(title, res["remove_mark"])
                     
+                    # 进入去水印软件
+                    if res["remove_mark"] == "TK去水印":
+                        removeInTk()
+                    elif res["remove_mark"] == "抖音破解版":
+                        removeInDouyin()
+                    elif res["remove_mark"] == "青禾去水印":
+                        removeInQh()
+                    elif res["remove_mark"] == "网页去水印":
+                        removeInWeb()
+
                     # 使用剪映的AI剪视频来去重
                     if res["remove_repeat"] == "剪映AI":
                         jianYingAi(title)
