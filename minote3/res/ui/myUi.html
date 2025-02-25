@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>自动化脚本设置</title>
+        <link href="./layui/css/layui.css" rel="stylesheet">
+        <style>
+            :root {
+                --gradient-start: #05D395;  /* 渐变起始色 (绿色) */
+                --gradient-end: #05D395;    /* 渐变结束色 (绿色) */
+                --primary-color: #05D395;   /* 主色调 (绿色) */
+                --primary-hover: #03a56f;   /* 悬停色 (绿色) */
+                --primary-light: rgba(5, 211, 149, 0.1);  /* 浅色调 (绿色) */
+                --text-primary: #333333;
+                --text-secondary: #666666;
+                --border-radius: 4px;
+            }
+
+            body {
+                background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+                color: var(--text-primary);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                margin: 0;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .wrapper {
+                width: 100%;
+                max-width: 800px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+                overflow: hidden;
+                height: 100vh;
+            }
+
+            .title {
+                background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+                padding: 12px 0;
+                position: relative;
+            }
+
+            .title h2 {
+                color: #fff;
+                margin: 0;
+                font-size: 22px;
+                font-weight: 500;
+                text-align: center;
+            }
+
+            .layui-form {
+                padding: 10px 20px;
+                height: calc(100vh - 60px);
+                overflow-y: auto;
+            }
+
+            .layui-form-item {
+                margin-bottom: 15px;
+            }
+
+            .layui-form-label {
+                color: var(--text-secondary);
+                font-weight: 500;
+                padding: 9px 15px;
+            }
+
+            .layui-btn {
+                background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+                border: none;
+                border-radius: var(--border-radius);
+                transition: all 0.3s ease;
+            }
+
+            .layui-btn:hover {
+                background: linear-gradient(to right, var(--gradient-start), var(--gradient-start));
+                box-shadow: 0 2px 8px rgba(5, 211, 149, 0.3);
+            }
+
+            .layui-btn-primary {
+                background-color: #fff;
+                border: 1px solid #e6e6e6;
+                color: var(--text-secondary);
+            }
+
+            .layui-btn-primary:hover {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+
+            .layui-input,
+            .layui-select,
+            .layui-textarea {
+                border-radius: var(--border-radius);
+                transition: all 0.3s ease;
+            }
+
+            .layui-input:hover,
+            .layui-select:hover,
+            .layui-textarea:hover {
+                border-color: var(--primary-color);
+            }
+
+            .layui-input:focus,
+            .layui-select:focus,
+            .layui-textarea:focus {
+                border-color: var(--gradient-start) !important;
+                box-shadow: 0 0 0 3px var(--primary-light);
+            }
+
+            .layui-form-onswitch {
+                background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+                border-color: var(--gradient-start);
+            }
+
+            .layui-form-radio:hover *,
+            .layui-form-radioed * {
+                color: var(--gradient-start);
+            }
+
+            .layui-form-select dl dd.layui-this {
+                background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+                color: #fff;
+            }
+
+            .layui-row {
+                margin-top: 0;
+                padding: 10px 20px;
+                background: rgba(250, 250, 250, 0.9);
+                border-top: 1px solid #eee;
+                position: sticky;
+                bottom: 0;
+                z-index: 1;
+            }
+
+            .layui-col-xs6 {
+                padding: 0 10px;
+            }
+
+            .layui-inline {
+                margin-bottom: 0;
+                margin-right: 0;
+            }
+
+            .layui-inline span {
+                margin: 0 10px;
+                color: var(--text-secondary);
+            }
+
+            style:last-of-type {
+                display: none;
+            }
+
+            .layui-input-block {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .layui-form-radio {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+</head>
+<body>
+<div class="wrapper">
+        <div class="title">
+                <h2>自动化脚本设置</h2>
+        </div>
+        <form class="layui-form layui-form-pane" action="">
+                <div class="layui-form-item">
+                        <label class="layui-form-label">运行方式</label>
+                        <div class="layui-input-block">
+                                <input type="radio" id="app" name="runWay" value="app" title="快手App" checked>
+                        </div>
+                </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">类目选择</label>
+                        <div class="layui-input-inline">
+                                <select name="filter" id="filter" lay-filter="filters">
+                                        <option value=""></option>
+                                        <option value="春季上新">春季上新</option>
+                                        <option value="家居百货">家居百货</option>
+                                        <option value="食品饮料" selected>食品饮料</option>
+                                        <option value="母婴玩具">母婴玩具</option>
+                                        <option value="个护清洁">个护清洁</option>
+                                        <option value="珠宝配饰">珠宝配饰</option>
+                                        <option value="茶酒生鲜">茶酒生鲜</option>
+                                        <option value="数码家电">数码家电</option>
+                                        <option value="女装女鞋">女装女鞋</option>
+                                        <option value="男装男鞋">男装男鞋</option>
+                                        <option value="运动户外">运动户外</option>
+                                        <option value="美妆护肤">美妆护肤</option>
+                                        <option value="医疗保健">医疗保健</option>
+                                </select>
+                        </div>
+                </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">去水印方式</label>
+                        <div class="layui-input-inline">
+                                <select name="remove_mark" id="remove_mark" lay-filter="remove_mark">
+                                        <option value=""></option>
+                                        <option value="TK去水印" selected>TK去水印</option>
+                                        <option value="青禾去水印">青禾去水印</option>
+                                        <option value="网页去水印">网页去水印</option>
+                                </select>
+                        </div>
+                </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">去重方式</label>
+                        <div class="layui-input-inline">
+                                <select name="remove_repeat" id="remove_repeat" lay-filter="remove_repeat">
+                                        <option value=""></option>
+                                        <option value="剪映AI" selected>剪映AI</option>
+                                </select>
+                        </div>
+                </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">找素材方式</label>
+                        <div class="layui-input-inline">
+                                <select name="find_video" id="find_video" lay-filter="find_video">
+                                        <option value=""></option>
+                                        <option value="快手App" selected>快手App</option>
+                                        <option value="抖音App">抖音App</option>
+                                </select>
+                        </div>
+                </div>
+                <div class="layui-row">
+                        <div class="layui-col-xs6">
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid"
+                                        onclick="wClose()">关闭
+                                </button>
+                        </div>
+                        <div class="layui-col-xs6">
+                                <button type="button" class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo2"
+                                        onclick="saveAndClose()">确定
+                                </button>
+                        </div>
+                </div>
+        </form>
+
+</div>
+<script src="./layui/layui.js"></script>
+<script>
+        function wClose() {
+                airscript.close();
+        }
+        
+        function saveAndClose() {
+                var runWay = document.querySelector('input[name="runWay"]:checked').value;
+                var selectedFilter = document.getElementById("filter").value;
+                var selectedRemoveMark = document.getElementById("remove_mark").value;
+                var selectedRemoveRepeat = document.getElementById("remove_repeat").value;
+                var selectedFindVideo = document.getElementById("find_video").value;
+
+                var data = {
+                        runWay: runWay,
+                        filter: selectedFilter,
+                        remove_mark: selectedRemoveMark,
+                        remove_repeat: selectedRemoveRepeat,
+                        find_video: selectedFindVideo,
+                };
+                
+                localStorage.setItem("formData", JSON.stringify(data));
+                console.log("选择和输入的数据已保存到 localStorage");
+                
+                wClose();
+        }
+        
+        window.onload = function () {
+                try {
+                        var data = localStorage.getItem("formData");
+                        if (data) {
+                                var parsedData = JSON.parse(data);
+                                if (parsedData.runWay) {
+                                        document.querySelector(`input[name="runWay"][value="${parsedData.runWay}"]`).checked = true;
+                                }
+                                document.getElementById("filter").value = parsedData.filter || "";
+                                document.getElementById("remove_mark").value = parsedData.remove_mark || "";
+                                document.getElementById("remove_repeat").value = parsedData.remove_repeat || "";
+                                document.getElementById("find_video").value = parsedData.find_video || "";
+                        }
+                } catch (e) {
+                        console.log("没有找到之前的数据");
+                }
+                
+                layui.use('form', function(){
+                        var form = layui.form;
+                        form.render('select');
+                });
+        };
+</script>
+
+<script>
+        layui.use(['form'], function () {
+                var form = layui.form;
+                var layer = layui.layer;
+                form.on('submit(demo2)', function (data) {
+                        var field = data.field;
+                        airscript.call("submit", JSON.stringify(field));
+                        return false;
+                });
+        });
+</script>
+</body>
+</html>
