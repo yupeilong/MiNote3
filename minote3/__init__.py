@@ -834,6 +834,34 @@ def jianYingAi(title):
     click(find30FPS["result"])
     random_delay()
     click_node_simulation(Selector().text("导出").type("Button"))
+    # 判断“努力导出中...”控件是否仍然存在，如果存在则继续等待，直到消失
+    start_time = time.time()
+    attempts = 0
+    while True and time.time() - start_time < 180:
+            if not Selector().text("努力导出中...").find():
+                print("“努力导出中...”控件已消失，下载完成！")
+                break  # 控件消失，退出循环
+            else:
+                print("“努力导出中...”控件仍然存在，继续等待...")
+                time.sleep(1)  # 每隔1秒检查一次
+            attempts += 1
+            random_delay(0.4, 1.0)  # 随机间隔模拟人为的操作速度
+
+            if attempts % 5 == 0:
+                print(f"轮询次数: {attempts}")
+    # 判断是否有拯救画质，是则点✖️
+    attempt_count = 0
+    while True and attempt_count < 5:
+        findTry = Selector().text("马上试试").find()
+        if findTry:
+            print("我找到了马上试试")
+            path = R(__file__).res("img/jyclose.png")
+            findCloseBtn = FindImages.find(path, confidence=0.95) 
+            click["result"]
+            break
+        attempt_count += 1
+        print(f"我尝试查找马上试试第({attempt_count})次")
+        random_delay(1, 2)
     findOutSuccess = wait_for_node(Selector().text("^完成$"), timeout=180)
     random_delay()
     clearApp()
@@ -844,9 +872,9 @@ def tunner(k, v):
         # # 声明使用全局变量
         # global counter_data
         res = json.loads(v)
-        # lockApp("AScript", "开发者") # 测试版1
+        lockApp("AScript", "开发者") # 测试版1
         # lockApp("MiTest", "运 行") # 测试版2
-        lockApp("聚宝盆", "运 行") # 正式版
+        # lockApp("聚宝盆", "运 行") # 正式版
         filterName = res["filter"]
         if res["runWay"] == "app":
             # 创建 R 类的实例
